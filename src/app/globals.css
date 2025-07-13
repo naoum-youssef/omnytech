@@ -24,3 +24,233 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Keyframe animation for titles*/
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.word-animate {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.word-animate.animate-start {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.word-animate.animate-start.word-delay-1 { animation-delay: 0.2s; }
+.word-animate.animate-start.word-delay-2 { animation-delay: 0.4s; }
+.word-animate.animate-start.word-delay-3 { animation-delay: 0.6s; }
+.word-animate.animate-start.word-delay-4 { animation-delay: 0.8s; }
+
+
+
+
+
+
+
+
+/* Pricing Section - Nos Offres - Card selection styles for packages */
+.pricing-card {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  opacity: 1; /* Ensure visible by default */
+}
+
+.pricing-card.selected {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%) !important;
+  transform: scale(1.05) !important;
+  border-color: #a855f7 !important;
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+  z-index: 10;
+}
+
+/* Card animations - desktop only */
+@media (min-width: 769px) {
+  .card-animate {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  .card-animate.animate-start {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .card-animate.animate-start.card-delay-1 { animation-delay: 0.2s; }
+  .card-animate.animate-start.card-delay-2 { animation-delay: 0.4s; }
+  .card-animate.animate-start.card-delay-3 { animation-delay: 0.6s; }
+}
+
+/* Mobile - no animations, just show cards */
+@media (max-width: 768px) {
+  .card-animate {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .pricing-card {
+    margin-bottom: 1rem;
+  }
+
+  .pricing-card.selected {
+    transform: scale(1.02) !important; /* Smaller scale on mobile */
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) and (pointer: fine) {
+  .pricing-card.selected:hover {
+    transform: scale(1.05) !important;
+  }
+
+  .pricing-card:not(.selected):hover {
+    transform: translateY(-5px);
+  }
+}
+
+/* Mobile touch effects */
+@media (hover: none) and (pointer: coarse) {
+  .pricing-card:active {
+    transform: scale(0.98);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Stats Section - Counter animation for numbers */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.counter-animate {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.counter-animate.animate-start {
+  animation: countUp 0.8s ease-out forwards;
+}
+
+.counter-delay-1 { animation-delay: 0.2s; }
+.counter-delay-2 { animation-delay: 0.4s; }
+.counter-delay-3 { animation-delay: 0.6s; }
+.counter-delay-4 { animation-delay: 0.8s; }
+
+
+
+
+
+
+/* contact form - Fix for select dropdown styling */
+select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+select option {
+  background-color: #1f2937 !important; /* dark-800 */
+  color: #ffffff !important;
+  padding: 8px 12px;
+}
+
+/* Fix focus state */
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #7c3aed; /* primary-500 */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* FAQ Accordion Styles */
+.faq-item {
+  transition: all 0.3s ease;
+}
+
+.faq-item.active {
+  border-color: rgb(139, 92, 246); /* primary-500/30 */
+}
+
+.faq-question:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.faq-answer {
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.faq-icon {
+  transition: transform 0.3s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Portfolio Section Styles */
+.portfolio-card {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.portfolio-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+
