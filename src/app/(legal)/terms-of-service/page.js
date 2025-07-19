@@ -1,6 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
-// (legal)/terms-of-service/page.js
-
 import Link from 'next/link';
 import { ArrowLeft, FileText, Scale, Briefcase, CheckCircle, Clock, Users, AlertTriangle, Code, Globe, Settings, Phone, Mail, MapPin, ExternalLink, Building2, CreditCard, Shield } from 'lucide-react';
 
@@ -50,11 +47,11 @@ export default function TermsOfService() {
                     <div className="flex items-center justify-center space-x-8 text-neutral-400 text-sm">
                         <div className="flex items-center">
                             <Clock className="w-4 h-4 mr-2 text-purple-400" />
-                            Mise à jour : 17 janvier 2025
+                            Mise à jour : 15 Mars 2025
                         </div>
                         <div className="flex items-center">
                             <Scale className="w-4 h-4 mr-2 text-purple-400" />
-                            Entrée en vigueur : 17 janvier 2025
+                            Entrée en vigueur : 15 Mars 2025
                         </div>
                     </div>
                 </div>
@@ -75,14 +72,14 @@ export default function TermsOfService() {
                                 <Users className="w-5 h-5 text-purple-400 mr-3" />
                                 <div>
                                     <span className="text-white font-medium">Nom commercial :</span>
-                                    <span className="ml-2">Hassan El Berkaoui</span>
+                                    <span className="ml-2">Mouad Ouammou & Naoum Youssef</span>
                                 </div>
                             </div>
                             <div className="flex items-center p-4 bg-dark-700/50 rounded-xl border border-white/5">
                                 <FileText className="w-5 h-5 text-purple-400 mr-3" />
                                 <div>
                                     <span className="text-white font-medium">Statut :</span>
-                                    <span className="ml-2">Auto Entrepreneur (Individuel) - Maroc</span>
+                                    <span className="ml-2">Auto Entrepreneurs (Individuel) - Maroc</span>
                                 </div>
                             </div>
                             <div className="flex items-start p-4 bg-dark-700/50 rounded-xl border border-white/5">
@@ -98,14 +95,14 @@ export default function TermsOfService() {
                                 <Mail className="w-5 h-5 text-purple-400 mr-3" />
                                 <div>
                                     <span className="text-white font-medium">Email :</span>
-                                    <span className="ml-2">fentronly@gmail.com</span>
+                                    <span className="ml-2">contact@omnytech.com</span>
                                 </div>
                             </div>
                             <div className="flex items-center p-4 bg-dark-700/50 rounded-xl border border-white/5">
                                 <Phone className="w-5 h-5 text-purple-400 mr-3" />
                                 <div>
                                     <span className="text-white font-medium">Téléphone :</span>
-                                    <span className="ml-2">+212 6 76 62 90 22</span>
+                                    <span className="ml-2">+212 6 94 13 80 93</span>
                                 </div>
                             </div>
                             <div className="flex items-center p-4 bg-dark-700/50 rounded-xl border border-white/5">
@@ -332,21 +329,21 @@ export default function TermsOfService() {
                         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto border border-white/20">
                             <h3 className="text-white font-medium mb-4 flex items-center justify-center">
                                 <Building2 className="w-5 h-5 mr-2" />
-                                Hassan El Berkaoui
+                                Omny Tech
                             </h3>
                             <p className="text-purple-100 text-sm mb-4">Auto Entrepreneur - Services de Développement Web</p>
                             <div className="space-y-3 text-purple-100 text-sm">
                                 <div className="flex items-center justify-center">
                                     <Mail className="w-4 h-4 mr-2" />
-                                    fentronly@gmail.com
+                                    contact@omnytech.com
                                 </div>
                                 <div className="flex items-center justify-center">
                                     <Phone className="w-4 h-4 mr-2" />
-                                    +212 6 76 62 90 22
+                                    +212 6 94 13 80 93
                                 </div>
                                 <div className="flex items-center justify-center">
                                     <Phone className="w-4 h-4 mr-2" />
-                                    WhatsApp: +212 6 76 62 90 22
+                                    WhatsApp: +212 6 94 13 80 93
                                 </div>
                                 <div className="flex items-center justify-center">
                                     <MapPin className="w-4 h-4 mr-2" />

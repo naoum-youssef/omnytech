@@ -17,7 +17,7 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-    title: 'OmnyTech - Agence de Développement Web & Mobile au Maroc',
+    title: 'OmnyTech - Solutions Digitales, Web & Mobile au Maroc',
     description: 'OmnyTech, votre partenaire de confiance pour la création de sites web, le développement web sur mesure et les applications mobiles. Expertise technique et innovation au service de votre entreprise.',
     keywords: 'développement web, création site web, application mobile, développement sur mesure, agence web Maroc, OmnyTech',
     authors: [{ name: 'OmnyTech' }],

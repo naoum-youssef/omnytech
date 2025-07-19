@@ -25,8 +25,214 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Keyframe animation for titles*/
+/* ===== HERO SECTION CURVED GRADIENT BACKGROUND ===== */
+.hero-gradient-bg {
+  position: relative;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0e4b99 100%);
+  overflow: hidden;
+}
 
+.hero-gradient-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+          radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-gradient-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(180deg, transparent 0%, rgba(15, 15, 35, 0.8) 100%);
+  pointer-events: none;
+}
+
+/* Curved bottom edge for hero section */
+.hero-curve {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: #0f172a;
+  clip-path: ellipse(100% 100% at 50% 100%);
+}
+
+/* ===== ANIMATED GRADIENT MESH BACKGROUND ===== */
+.gradient-mesh {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+          linear-gradient(45deg, transparent 30%, rgba(168, 85, 247, 0.1) 50%, transparent 70%),
+          linear-gradient(-45deg, transparent 30%, rgba(59, 130, 246, 0.1) 50%, transparent 70%),
+          linear-gradient(90deg, transparent 30%, rgba(139, 92, 246, 0.05) 50%, transparent 70%);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+  pointer-events: none;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%, 100% 50%, 50% 0%;
+  }
+  50% {
+    background-position: 100% 50%, 0% 50%, 50% 100%;
+  }
+}
+
+/* ===== FLOATING PARTICLES BACKGROUND ===== */
+.particles-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(168, 85, 247, 0.6);
+  border-radius: 50%;
+  animation: float-particle 6s ease-in-out infinite;
+}
+
+.particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+.particle:nth-child(2) { top: 20%; left: 80%; animation-delay: 1s; }
+.particle:nth-child(3) { top: 60%; left: 20%; animation-delay: 2s; }
+.particle:nth-child(4) { top: 80%; left: 70%; animation-delay: 3s; }
+.particle:nth-child(5) { top: 40%; left: 90%; animation-delay: 4s; }
+
+@keyframes float-particle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+/* ===== SECTION BACKGROUND GRADIENTS ===== */
+.section-gradient-dark {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  position: relative;
+}
+
+.section-gradient-purple {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);
+  position: relative;
+}
+
+.section-gradient-mixed {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e293b 75%, #334155 100%);
+  position: relative;
+}
+
+/* ===== BLOB ANIMATIONS ===== */
+.blob-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: blob 7s infinite;
+}
+
+.blob-1 {
+  top: 10%;
+  left: 10%;
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(45deg, rgba(168, 85, 247, 0.3), rgba(59, 130, 246, 0.3));
+  animation-delay: 0s;
+}
+
+.blob-2 {
+  top: 60%;
+  right: 10%;
+  width: 250px;
+  height: 250px;
+  background: linear-gradient(45deg, rgba(139, 92, 246, 0.2), rgba(16, 185, 129, 0.2));
+  animation-delay: 2s;
+}
+
+.blob-3 {
+  bottom: 10%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.2), rgba(168, 85, 247, 0.2));
+  animation-delay: 4s;
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+/* ===== PURPLE GLOW EFFECTS ===== */
+.purple-glow {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.purple-glow-lg {
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+}
+
+.purple-glow-xl {
+  box-shadow: 0 0 60px rgba(168, 85, 247, 0.7);
+}
+
+/* ===== GLASS MORPHISM EFFECTS ===== */
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-morphism-purple {
+  background: rgba(168, 85, 247, 0.1);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+/* Keyframe animation for titles*/
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -51,13 +257,6 @@ body {
 .word-animate.animate-start.word-delay-2 { animation-delay: 0.4s; }
 .word-animate.animate-start.word-delay-3 { animation-delay: 0.6s; }
 .word-animate.animate-start.word-delay-4 { animation-delay: 0.8s; }
-
-
-
-
-
-
-
 
 /* Pricing Section - Nos Offres - Card selection styles for packages */
 .pricing-card {
@@ -126,17 +325,6 @@ body {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 /* Stats Section - Counter animation for numbers */
 @keyframes countUp {
   from {
@@ -163,11 +351,6 @@ body {
 .counter-delay-3 { animation-delay: 0.6s; }
 .counter-delay-4 { animation-delay: 0.8s; }
 
-
-
-
-
-
 /* contact form - Fix for select dropdown styling */
 select {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
@@ -192,19 +375,6 @@ select:focus {
   box-shadow: 0 0 0 2px #7c3aed; /* primary-500 */
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* FAQ Accordion Styles */
 .faq-item {
   transition: all 0.3s ease;
@@ -226,23 +396,6 @@ select:focus {
   transition: transform 0.3s ease;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Portfolio Section Styles */
 .portfolio-card {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -253,4 +406,84 @@ select:focus {
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
 }
 
+/* ===== SCROLL ANIMATIONS ===== */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* ===== CUSTOM SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #a855f7, #9333ea);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #9333ea, #7c3aed);
+}
+
+/* ===== NOISE TEXTURE ===== */
+.noise-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+          radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+  background-size: 20px 20px;
+  opacity: 0.02;
+  pointer-events: none;
+}

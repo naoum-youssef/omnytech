@@ -40,12 +40,91 @@ import {
   Sparkles,
   Timer,
   Headphones,
-  Send
+  Send,
+  CreditCard
 } from 'lucide-react';
+
+
+
+
+
+{/* Contact form events */}
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
+  // Contact Form State Management
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    service: '',
+    budget: '',
+    timeline: '',
+    message: ''
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null);
+
+  // Contact Form Event Handlers
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus(null);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
+          subject: `Nouvelle demande de contact de ${formData.name}`,
+          from_name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          service: formData.service,
+          budget: formData.budget,
+          timeline: formData.timeline,
+          message: formData.message
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: '',
+          budget: '',
+          timeline: '',
+          message: ''
+        });
+      } else {
+        throw new Error(result.message || 'Erreur lors de l\'envoi');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setStatus('error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Mouse Position Tracker
   useEffect(() => {
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -54,36 +133,41 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+
+  {/* */}
+
+
   return (
       <>
-        {/* Hero Section with Advanced Design */}
-        <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-dark">
-          {/* Dynamic Background */}
+        {/* Hero Section with Purple Theme */}
+        <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-dark-900 pt-20">
+          {/* Dynamic Background with Purple Theme */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-noise opacity-[0.02]"></div>
             <div
-                className="absolute w-96 h-96 bg-primary-500/10 rounded-full blur-4xl transition-all duration-500 ease-out"
+                className="absolute w-96 h-96 bg-purple-500/10 rounded-full blur-4xl transition-all duration-500 ease-out"
                 style={{
                   left: mousePosition.x / 10 - 192,
                   top: mousePosition.y / 10 - 192,
                 }}
             ></div>
-            <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-secondary-500/5 rounded-full blur-3xl animate-blob"></div>
-            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-accent-500/5 rounded-full blur-3xl animate-blob" style={{animationDelay: '2s'}}></div>
+            <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-blob"></div>
+            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-primary-500/5 rounded-full blur-3xl animate-blob" style={{animationDelay: '2s'}}></div>
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               {/* Content */}
               <div className="text-center lg:text-left animate-fade-in-up">
-                <div className="inline-flex items-center px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full text-primary-300 text-sm font-medium mb-6">
-
+                <div className="inline-flex items-center px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium mb-6">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Solutions Digitales Innovantes
                 </div>
 
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 font-display leading-tight">
-                    <span className="word-animate word-delay-1">Votre</span>{' '}
-                    <span className="word-animate word-delay-2">Vision,</span>
-                    <span className="block">
+                  <span className="word-animate word-delay-1">Votre</span>{' '}
+                  <span className="word-animate word-delay-2 bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Vision,</span>
+                  <span className="block">
                     <span className="word-animate word-delay-3">Notre</span>{' '}
                     <span className="word-animate word-delay-4">Expertise</span>
           </span>
@@ -97,7 +181,7 @@ export default function Home() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-12">
                   <button
                       onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="group relative inline-flex items-center px-8 py-4 bg-gradient-primary text-white font-semibold rounded-2xl shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:-translate-y-1"
+                      className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold rounded-2xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-2 hover:scale-105"
                   >
                     <Rocket className="w-5 h-5 mr-2 group-hover:animate-bounce" />
                     Découvrir nos services
@@ -106,36 +190,42 @@ export default function Home() {
 
                   <button
                       onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="group inline-flex items-center px-8 py-4 border-2 border-white/20 text-white font-semibold rounded-2xl hover:bg-white/10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1"
+                      className="group inline-flex items-center px-8 py-4 border-2 border-white/20 text-white font-semibold rounded-2xl hover:bg-white/10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-purple-500/50"
                   >
                     <MessageCircle className="w-5 h-5 mr-2" />
                     Nous contacter
                   </button>
                 </div>
 
-                {/* Stats */}
+                {/* Stats with Purple Theme */}
                 <div className="grid grid-cols-3 gap-8 pt-8 border-t border-white/10">
-                  <div className="text-center lg:text-left">
-                    <div className="text-3xl font-bold text-white mb-1">50+</div>
-                    <div className="text-sm text-neutral-400">Projets Réalisés</div>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <div className="text-3xl font-bold text-white mb-1">98%</div>
-                    <div className="text-sm text-neutral-400">Clients Satisfaits</div>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <div className="text-3xl font-bold text-white mb-1">24/7</div>
-                    <div className="text-sm text-neutral-400">Support</div>
-                  </div>
+                  {[
+                    { number: '50+', label: 'Projets Réalisés', icon: Rocket },
+                    { number: '98%', label: 'Clients Satisfaits', icon: Heart },
+                    { number: '24/7', label: 'Support', icon: Headphones }
+                  ].map((stat, index) => {
+                    const IconComponent = stat.icon;
+                    return (
+                        <div key={stat.label} className="text-center lg:text-left">
+                          <div className="flex items-center justify-center lg:justify-start mb-2">
+                            <div className="w-8 h-8 bg-purple-500/20 rounded-xl flex items-center justify-center mr-2">
+                              <IconComponent className="w-4 h-4 text-purple-400" />
+                            </div>
+                            <div className="text-3xl font-bold text-white">{stat.number}</div>
+                          </div>
+                          <div className="text-sm text-neutral-400">{stat.label}</div>
+                        </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Visual */}
+              {/* Visual with Purple Theme */}
               <div className="relative animate-fade-in-up lg:animate-fade-in-right">
                 <div className="relative">
-                  {/* Main Image Placeholder */}
-                  <div className="relative w-full h-96 bg-gradient-to-br from-dark-800 to-dark-900 rounded-3xl border border-white/10 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-secondary-500/20"></div>
+                  {/* Main Image Container with Purple Accents */}
+                  <div className="relative w-full h-96 bg-gradient-to-br from-dark-800 to-dark-900 rounded-3xl border border-white/10 hover:border-purple-500/30 transition-all duration-500 hover:-translate-y-1 overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-secondary-500/20"></div>
 
                     {/* Floating Icons */}
                     <div className="absolute top-6 left-6 p-3 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
@@ -154,7 +244,7 @@ export default function Home() {
                     {/* Center Content */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center">
-                        <div className="w-20 h-20 bg-gradient-primary rounded-2xl flex items-center justify-center mb-4 mx-auto animate-float">
+                        <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl flex items-center justify-center mb-4 mx-auto animate-float group-hover:animate-pulse">
                           <Globe className="w-10 h-10 text-white" />
                         </div>
                         <div className="text-white font-semibold text-lg">Solutions Digitales</div>
@@ -163,9 +253,9 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Floating Elements */}
-                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-secondary-500 rounded-full flex items-center justify-center animate-pulse-glow">
-                    <span className="text-white font-bold text-lg">+5</span>
+                  {/* Floating Elements with Purple Theme */}
+                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center animate-pulse-glow border-4 border-white/20">
+                    <span className="text-white font-bold text-lg">5+</span>
                   </div>
                 </div>
               </div>
@@ -174,22 +264,31 @@ export default function Home() {
 
           {/* Scroll Indicator */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <ChevronDown className="w-6 h-6 text-white/60" />
+            <div className="w-12 h-12 border-2 border-white/30 rounded-full flex items-center justify-center hover:border-purple-400 transition-colors">
+              <ChevronDown className="w-6 h-6 text-white/60" />
+            </div>
           </div>
         </section>
 
-        {/* About Section */}
-        <section id="apropos" className="py-20 bg-dark-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* About Section with Purple Theme */}
+        <section id="apropos" className="py-20 bg-dark-800 relative overflow-hidden">
+          {/* Purple Background Effects */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-blob"></div>
+            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-primary-500/5 rounded-full blur-3xl animate-blob" style={{animationDelay: '2s'}}></div>
+            <div className="absolute inset-0 bg-noise opacity-[0.01]"></div>
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center px-4 py-2 bg-primary-500/10 border border-primary-500/20 rounded-full text-primary-400 text-sm font-medium mb-6">
+              <div className="inline-flex items-center px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium mb-6">
                 <Users className="w-4 h-4 mr-2" />
                 À Propos de Nous
               </div>
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-display">
                 <span className="word-animate word-delay-1">À</span>{' '}
                 <span className="word-animate word-delay-2">Propos</span>{' '}
-                <span className="word-animate word-delay-3">d'</span><span className="word-animate word-delay-4">OmnyTech</span>
+                <span className="word-animate word-delay-3 bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">d'OmnyTech</span>
               </h2>
               <p className="text-xl text-neutral-300 max-w-3xl mx-auto">
                 Une équipe passionnée dédiée à l'excellence technologique
@@ -199,11 +298,11 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="animate-slide-in-left">
                 <div className="relative">
-                  <div className="w-full h-96 bg-gradient-to-br from-dark-700 to-dark-900 rounded-3xl border border-white/10 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-secondary-500/10"></div>
+                  <div className="w-full h-96 bg-gradient-to-br from-dark-700 to-dark-900 rounded-3xl border border-white/10 hover:border-purple-500/30 transition-all duration-500 hover:-translate-y-1 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-secondary-500/10"></div>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center">
-                        <div className="w-24 h-24 bg-gradient-primary rounded-3xl flex items-center justify-center mb-4 mx-auto">
+                        <div className="w-24 h-24 bg-gradient-to-r from-purple-600 to-purple-700 rounded-3xl flex items-center justify-center mb-4 mx-auto">
                           <Award className="w-12 h-12 text-white" />
                         </div>
                         <div className="text-white font-semibold text-xl mb-2">Excellence</div>
@@ -211,17 +310,17 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-secondary-500 rounded-full flex items-center justify-center animate-pulse-glow">
-                    <span className="text-white font-bold text-lg">+5</span>
+                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center animate-pulse-glow border-4 border-white/20">
+                    <span className="text-white font-bold text-lg">5+</span>
                   </div>
                 </div>
               </div>
 
               <div className="animate-slide-in-right space-y-6">
-                <div className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-primary-500/30 transition-all duration-300 group">
+                <div className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 group">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-primary-500/20 rounded-xl flex items-center justify-center group-hover:bg-primary-500/30 transition-colors">
-                      <Target className="w-6 h-6 text-primary-400" />
+                    <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center group-hover:bg-purple-500/30 transition-colors">
+                      <Target className="w-6 h-6 text-purple-400" />
                     </div>
                     <h3 className="text-xl font-semibold text-white ml-4">Notre Mission</h3>
                   </div>
@@ -231,7 +330,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-secondary-500/30 transition-all duration-300 group">
+                <div className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 group">
                   <div className="flex items-center mb-4">
                     <div className="w-12 h-12 bg-secondary-500/20 rounded-xl flex items-center justify-center group-hover:bg-secondary-500/30 transition-colors">
                       <Eye className="w-6 h-6 text-secondary-400" />
@@ -244,7 +343,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-accent-500/30 transition-all duration-300 group">
+                <div className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 group">
                   <div className="flex items-center mb-4">
                     <div className="w-12 h-12 bg-accent-500/20 rounded-xl flex items-center justify-center group-hover:bg-accent-500/30 transition-colors">
                       <Lightbulb className="w-6 h-6 text-accent-400" />
@@ -261,9 +360,16 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Services Section */}
-        <section id="services" className="py-20 bg-dark-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Services Section with Purple Theme */}
+        <section id="services" className="py-20 bg-dark-900 relative overflow-hidden">
+          {/* Purple Background Effects */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-secondary-500/5 rounded-full blur-3xl animate-blob"></div>
+            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-blob" style={{animationDelay: '2s'}}></div>
+            <div className="absolute inset-0 bg-noise opacity-[0.01]"></div>
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <div className="inline-flex items-center px-4 py-2 bg-secondary-500/10 border border-secondary-500/20 rounded-full text-secondary-400 text-sm font-medium mb-6">
                 <Zap className="w-4 h-4 mr-2" />
@@ -271,7 +377,7 @@ export default function Home() {
               </div>
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-display">
                 <span className="word-animate word-delay-1">Nos</span>{' '}
-                <span className="word-animate word-delay-2">Services</span>
+                <span className="word-animate word-delay-2 bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Services</span>
               </h2>
               <p className="text-xl text-neutral-300 max-w-3xl mx-auto">
                 Des solutions complètes pour répondre à tous vos besoins digitaux
@@ -279,11 +385,11 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Service 1 - Création de site web */}
-              <div className="group relative bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-primary-500/30 transition-all duration-500 hover:-translate-y-2">
+              {/* Service 1 - Purple Theme */}
+              <div className="group relative bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-purple-500/30 transition-all duration-500 hover:-translate-y-2">
                 <div className="text-center">
                   <div className="relative mb-6">
-                    <div className="w-20 h-20 bg-gradient-primary rounded-2xl mx-auto flex items-center justify-center group-hover:animate-pulse-glow">
+                    <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl mx-auto flex items-center justify-center group-hover:animate-pulse-glow">
                       <Monitor className="w-10 h-10 text-white" />
                     </div>
                     <div className="absolute -top-2 -right-2 w-6 h-6 bg-accent-400 rounded-full animate-ping"></div>
@@ -299,26 +405,26 @@ export default function Home() {
 
                   <ul className="space-y-3 text-sm text-neutral-400 mb-6">
                     <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 text-primary-400 mr-3" />
+                      <CheckCircle className="w-4 h-4 text-purple-400 mr-3" />
                       Design responsive et moderne
                     </li>
                     <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 text-primary-400 mr-3" />
+                      <CheckCircle className="w-4 h-4 text-purple-400 mr-3" />
                       Optimisation SEO avancée
                     </li>
                     <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 text-primary-400 mr-3" />
+                      <CheckCircle className="w-4 h-4 text-purple-400 mr-3" />
                       Performance et sécurité
                     </li>
                     <li className="flex items-center">
-                      <CheckCircle className="w-4 h-4 text-primary-400 mr-3" />
+                      <CheckCircle className="w-4 h-4 text-purple-400 mr-3" />
                       CMS facile à utiliser
                     </li>
                   </ul>
 
                   <button
                       onClick={() => document.getElementById('offres')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="group w-full bg-gradient-primary text-white font-semibold py-3 px-6 rounded-xl shadow-glow hover:shadow-glow-lg transition-all duration-300 flex items-center justify-center"
+                      className="group w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 px-6 rounded-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 flex items-center justify-center"
                   >
                     En savoir plus
                     <ArrowUpRight className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -326,7 +432,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Service 2 - Développement Web sur Mesure */}
+              {/* Service 2 */}
               <div className="group relative bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-secondary-500/30 transition-all duration-500 hover:-translate-y-2">
                 <div className="text-center">
                   <div className="relative mb-6">
@@ -373,7 +479,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Service 3 - Applications Mobiles */}
+              {/* Service 3 */}
               <div className="group relative bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-accent-500/30 transition-all duration-500 hover:-translate-y-2">
                 <div className="text-center">
                   <div className="relative mb-6">
@@ -421,12 +527,12 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Technologies Section */}
+            {/* Technologies Section with Purple Theme */}
             <div className="mt-20">
               <div className="text-center mb-12">
                 <h3 className="text-3xl font-bold text-white mb-4 font-display">
                   <span className="word-animate word-delay-1">Technologies</span>{' '}
-                  <span className="word-animate word-delay-2">Maîtrisées</span>
+                  <span className="word-animate word-delay-2 bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Maîtrisées</span>
                 </h3>
                 <p className="text-lg text-neutral-300">
                   Nous utilisons les dernières technologies pour garantir des solutions performantes
@@ -435,7 +541,7 @@ export default function Home() {
 
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
                 {[
-                  { name: 'React', color: 'text-blue-400' },
+                  { name: 'React.js', color: 'text-blue-400' },
                   { name: 'Next.js', color: 'text-white' },
                   { name: 'Angular', color: 'text-red-500' },
                   { name: 'Spring Boot', color: 'text-green-400' },
@@ -443,11 +549,10 @@ export default function Home() {
                   { name: 'Laravel', color: 'text-red-400' },
                   { name: 'Flutter', color: 'text-blue-500' },
                   { name: 'Kotlin', color: 'text-orange-400' }
-
                 ].map((tech, index) => (
                     <div
                         key={tech.name}
-                        className="group flex flex-col items-center p-6 bg-dark-700/30 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-primary-500/30 transition-all duration-300 hover:-translate-y-1 animate-scale-in"
+                        className="group flex flex-col items-center p-6 bg-dark-700/30 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 hover:-translate-y-1 animate-scale-in"
                         style={{animationDelay: `${index * 0.1}s`}}
                     >
                       <div className="w-12 h-12 mb-3 animate-float" style={{animationDelay: `${index * 0.5}s`}}>
@@ -463,10 +568,16 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Pricing Section with Purple Theme */}
+        <section id="offres" className="pricing-section py-20 bg-dark-800 relative overflow-hidden">
+          {/* Purple Background Effects */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-accent-500/5 rounded-full blur-3xl animate-blob"></div>
+            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-blob" style={{animationDelay: '2s'}}></div>
+            <div className="absolute inset-0 bg-noise opacity-[0.01]"></div>
+          </div>
 
-        {/* Pricing Section - Nos Offres */}
-        <section id="offres" className="pricing-section py-20 bg-dark-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <div className="inline-flex items-center px-4 py-2 bg-accent-500/10 border border-accent-500/20 rounded-full text-accent-400 text-sm font-medium mb-6">
                 <Star className="w-4 h-4 mr-2" />
@@ -474,7 +585,7 @@ export default function Home() {
               </div>
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-display">
                 <span className="word-animate word-delay-1">Tarifs</span>{' '}
-                <span className="word-animate word-delay-2">Transparents</span>
+                <span className="word-animate word-delay-2 bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Transparents</span>
               </h2>
               <p className="text-xl text-neutral-300 max-w-3xl mx-auto auto-animate">
                 Choisissez l'offre qui correspond parfaitement à vos besoins et votre budget
@@ -482,206 +593,187 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Starter Package */}
-              <div className="pricing-card card-animate card-delay-1 relative bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-primary-500/30 transition-all duration-500">
+              {/* Landing Page Package */}
+              <div className="pricing-card card-animate card-delay-1 relative bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-purple-500/30 transition-all duration-500">
+                {/* Popular Badge */}
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-1 rounded-full text-white text-xs font-semibold">
+                    POPULAR
+                  </div>
+                </div>
+
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-primary rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl mx-auto mb-6 flex items-center justify-center">
                     <Globe className="w-8 h-8 text-white" />
                   </div>
 
-                  <h3 className="text-2xl font-bold text-white mb-2 auto-animate">Site Vitrine</h3>
-                  <p className="text-neutral-400 mb-6 auto-animate">Parfait pour débuter votre présence en ligne</p>
+                  <h3 className="text-2xl font-bold text-white mb-2">Landing Page</h3>
+                  <p className="text-neutral-400 mb-6">Perfect for getting started</p>
 
                   <div className="mb-8">
-                    <div className="text-4xl font-bold text-white mb-2">
-                      15,000 <span className="text-lg font-normal text-neutral-400">MAD</span>
+                    <div className="text-lg text-neutral-400 line-through mb-1">
+                      4,643 MAD
                     </div>
-                    <div className="text-sm text-neutral-400">Projet complet</div>
+                    <div className="inline-flex items-center bg-purple-500/20 px-3 py-1 rounded-full mb-3">
+                      <span className="text-purple-400 text-sm font-semibold">30% OFF</span>
+                    </div>
+                    <div className="text-4xl font-bold text-neutral-300-400 mb-2">
+                      3,250 MAD
+                    </div>
                   </div>
 
                   <ul className="space-y-3 mb-8 text-left">
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-primary-400 mr-3 flex-shrink-0" />
-                      Site responsive (mobile/tablet/desktop)
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      Custom Design
                     </li>
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-primary-400 mr-3 flex-shrink-0" />
-                      Jusqu'à 5 pages
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      Mobile Responsive
                     </li>
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-primary-400 mr-3 flex-shrink-0" />
-                      Optimisation SEO de base
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      Contact Forms
                     </li>
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-primary-400 mr-3 flex-shrink-0" />
-                      Formulaire de contact
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-primary-400 mr-3 flex-shrink-0" />
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-primary-400 mr-3 flex-shrink-0" />
-                      Support 3 mois
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      SEO Optimized
                     </li>
                   </ul>
 
                   <button
-                      onClick={() => {
-                        localStorage.setItem('selectedPackage', 'Site Pro - 35,000 MAD');
-                        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="w-full bg-gradient-secondary text-white font-semibold py-3 px-6 rounded-xl shadow-glow-green hover:shadow-glow-lg transition-all duration-300"
+                      onClick={() => window.open('https://wa.me/212694138093?text=Bonjour, je suis intéressé par l\'offre Landing Page (3,250 MAD). Pouvez-vous me donner plus d\'informations?', '_blank')}
+                      className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 px-6 rounded-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300"
                   >
                     Choisir cette offre
                   </button>
                 </div>
               </div>
 
-              {/* Professional Package - Popular */}
+              {/* Website Package - Best Value */}
               <div className="pricing-card card-animate card-delay-2 relative bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border-2 border-secondary-500/50 hover:border-secondary-500/70 transition-all duration-500">
-                {/* Popular Badge */}
+                {/* Best Value Badge */}
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-gradient-to-r from-black-500 via-green-600 to-black-700 px-6 py-2 rounded-full text-white text-sm font-semibold flex items-center shadow-lg border border-green-400/30 backdrop-blur-sm">
-                    <Flame className="w-4 h-4 mr-2 text-orange-300 drop-shadow-sm animate-pulse" />
-                    Populaire
+                  <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-1 rounded-full text-white text-xs font-semibold">
+                    BEST VALUE
                   </div>
                 </div>
 
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-secondary rounded-2xl mx-auto mb-6 flex items-center justify-center">
-                    <Rocket className="w-8 h-8 text-white" />
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl mx-auto mb-6 flex items-center justify-center">                    <Rocket className="w-8 h-8 text-white" />
                   </div>
 
-                  <h3 className="text-2xl font-bold text-white mb-2 auto-animate">Site Pro</h3>
-                  <p className="text-neutral-400 mb-6 auto-animate">Solution complète pour les entreprises</p>
+                  <h3 className="text-2xl font-bold text-white mb-2">Website</h3>
+                  <p className="text-neutral-400 mb-6">Best value choice</p>
 
                   <div className="mb-8">
-                    <div className="text-4xl font-bold text-white mb-2">
-                      35,000 <span className="text-lg font-normal text-neutral-400">MAD</span>
+                    <div className="text-lg text-neutral-400 line-through mb-1">
+                      8,186 MAD
                     </div>
-                    <div className="text-sm text-neutral-400">Projet complet</div>
+                    <div className="inline-flex items-center bg-purple-500/20 px-3 py-1 rounded-full mb-3">
+                      <span className="text-purple-400 text-sm font-semibold">30% OFF</span>
+                    </div>
+                    <div className="text-4xl font-bold text-neutral-300-400 mb-2">
+                      5,730 MAD
+                    </div>
                   </div>
 
                   <ul className="space-y-3 mb-8 text-left">
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-secondary-400 mr-3 flex-shrink-0" />
-                      Site responsive avec animations
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      Multi-page Site
                     </li>
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-secondary-400 mr-3 flex-shrink-0" />
-                      Jusqu'à 15 pages
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      CMS Integration
                     </li>
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-secondary-400 mr-3 flex-shrink-0" />
-                      Optimisation SEO avancée
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      E-commerce Ready
                     </li>
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-secondary-400 mr-3 flex-shrink-0" />
-                      CMS personnalisé
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-secondary-400 mr-3 flex-shrink-0" />
-                      E-commerce (jusqu'à 50 produits)
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-secondary-400 mr-3 flex-shrink-0" />
-                      Intégrations tiers
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-secondary-400 mr-3 flex-shrink-0" />
-                      Hébergement 1 an inclus
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-secondary-400 mr-3 flex-shrink-0" />
-                      Support 6 mois
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      adminDashboard
                     </li>
                   </ul>
 
                   <button
-                      onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="w-full bg-gradient-primary text-white font-semibold py-3 px-6 rounded-xl shadow-glow hover:shadow-glow-lg transition-all duration-300"
+                      onClick={() => window.open('https://wa.me/212694138093?text=Bonjour, je suis intéressé par l\'offre Website (5,730 MAD). Pouvez-vous me donner plus d\'informations?', '_blank')}
+                      className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 px-6 rounded-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300"
                   >
                     Choisir cette offre
                   </button>
                 </div>
               </div>
 
-              {/* Enterprise Package */}
+              {/* SaaS Platform Package - New */}
               <div className="pricing-card card-animate card-delay-3 relative bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-accent-500/30 transition-all duration-500">
+                {/* New Badge */}
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-1 rounded-full text-white text-xs font-semibold">
+                    NEW
+                  </div>
+                </div>
+
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-accent-600 to-accent-700 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-                    <Award className="w-8 h-8 text-white" />
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl mx-auto mb-6 flex items-center justify-center">                    <Award className="w-8 h-8 text-white" />
                   </div>
 
-                  <h3 className="text-2xl font-bold text-white mb-2 auto-animate">Solution Enterprise</h3>
-                  <p className="text-neutral-400 mb-6 auto-animate">Sur mesure pour les grandes entreprises</p>
+                  <h3 className="text-2xl font-bold text-white mb-2">SaaS Platform</h3>
+                  <p className="text-neutral-400 mb-6">For complex requirements</p>
 
                   <div className="mb-8">
-                    <div className="text-4xl font-bold text-white mb-2">
-                      Sur <span className="text-lg font-normal text-neutral-400">Devis</span>
+                    <div className="text-lg text-neutral-400 line-through mb-1">
+                      45,714 MAD
                     </div>
-                    <div className="text-sm text-neutral-400">Selon vos besoins</div>
+                    <div className="inline-flex items-center bg-purple-500/20 px-3 py-1 rounded-full mb-3">
+                      <span className="text-purple-400 text-sm font-semibold">30% OFF</span>
+                    </div>
+                    <div className="text-4xl font-bold text-neutral-300-400 mb-2">
+                      32,000 MAD
+                    </div>
                   </div>
 
                   <ul className="space-y-3 mb-8 text-left">
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-accent-400 mr-3 flex-shrink-0" />
-                      Application web complexe
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      100% Custom
                     </li>
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-accent-400 mr-3 flex-shrink-0" />
-                      Pages illimitées
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      Payment System
                     </li>
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-accent-400 mr-3 flex-shrink-0" />
-                      Architecture sur mesure
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      User Dashboard
                     </li>
                     <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-accent-400 mr-3 flex-shrink-0" />
-                      API personnalisées
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-accent-400 mr-3 flex-shrink-0" />
-                      Tableau de bord avancé
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-accent-400 mr-3 flex-shrink-0" />
-                      Sécurité renforcée
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-accent-400 mr-3 flex-shrink-0" />
-                      Support prioritaire 24/7
-                    </li>
-                    <li className="flex items-center text-neutral-300">
-                      <Check className="w-5 h-5 text-accent-400 mr-3 flex-shrink-0" />
-                      Formation équipe
+                      <Check className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                      Full Deployment
                     </li>
                   </ul>
 
                   <button
-                      onClick={() => {
-                        localStorage.setItem('selectedPackage', 'Solution Enterprise - Sur Devis');
-                        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="w-full bg-gradient-to-r from-accent-600 to-accent-700 hover:from-accent-700 hover:to-accent-800 text-white font-semibold py-3 px-6 rounded-xl shadow-glow-yellow hover:shadow-glow-lg transition-all duration-300"
+                      onClick={() => window.open('https://wa.me/212694138093?text=Bonjour, je suis intéressé par l\'offre SaaS Platform (32,000 MAD). Pouvez-vous me donner plus d\'informations?', '_blank')}
+                      className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 px-6 rounded-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300"
                   >
-                    Demander un devis
+                    Choisir cette offre
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Additional Info */}
+            {/* Additional Info with Purple Theme */}
             <div className="mt-16 text-center">
-              <div className="bg-dark-700/30 backdrop-blur-sm rounded-2xl border border-white/10 p-8">
+              <div className="bg-gradient-to-r from-purple-600/20 to-purple-700/20 backdrop-blur-sm rounded-2xl border border-purple-500/30 p-8">
                 <h3 className="text-2xl font-bold text-white mb-4 auto-animate">Besoin d'une solution personnalisée ?</h3>
                 <p className="text-neutral-300 mb-6 max-w-2xl mx-auto auto-animate">
                   Chaque projet est unique. Contactez-nous pour discuter de vos besoins spécifiques
                   et obtenir un devis personnalisé adapté à votre budget.
                 </p>
                 <button
-                    onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="inline-flex items-center px-6 py-3 bg-gradient-primary text-white font-semibold rounded-xl shadow-glow hover:shadow-glow-lg transition-all duration-300"
+                    onClick={() => window.open('https://wa.me/212694138093?text=Bonjour, j,ai un Besoin d,une solution personnalisée\'informations?', '_blank')}
+                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold rounded-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300"
                 >
                   <MessageCircle className="w-5 h-5 mr-2" />
                   Discutons de votre projet
@@ -691,14 +783,20 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="stats-section py-20 bg-gradient-to-r from-primary-900/50 to-secondary-900/50 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Stats Section with Purple Theme */}
+        <section className="stats-section py-20 bg-gradient-to-r from-purple-900/50 to-primary-900/50 backdrop-blur-sm relative overflow-hidden">
+          {/* Purple Background Effects */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-blob"></div>
+            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-primary-500/5 rounded-full blur-3xl animate-blob" style={{animationDelay: '2s'}}></div>
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-white mb-4 font-display">
                 <span className="word-animate word-delay-1">Nos</span>{' '}
                 <span className="word-animate word-delay-2">Résultats</span>{' '}
-                <span className="word-animate word-delay-3">en</span>{' '}
+                <span className="word-animate word-delay-3 bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">en</span>{' '}
                 <span className="word-animate word-delay-4">Chiffres</span>
               </h3>
 
@@ -709,18 +807,18 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               {[
-                { number: '50+', label: 'Projets Réalisés', icon: Rocket, color: 'text-primary-400' },
-                { number: '98%', label: 'Clients Satisfaits', icon: Heart, color: 'text-secondary-400' },
-                { number: '24/7', label: 'Support Technique', icon: Headphones, color: 'text-accent-400' },
-                { number: '5+', label: 'Années d\'Expérience', icon: Award, color: 'text-primary-400' }
+                { number: '50+', label: 'Projets Réalisés', icon: Rocket, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+                { number: '98%', label: 'Clients Satisfaits', icon: Heart, color: 'text-secondary-400', bg: 'bg-secondary-500/10' },
+                { number: '24/7', label: 'Support Technique', icon: Headphones, color: 'text-accent-400', bg: 'bg-accent-500/10' },
+                { number: '5+', label: 'Années d\'Expérience', icon: Award, color: 'text-purple-400', bg: 'bg-purple-500/10' }
               ].map((stat, index) => {
                 const IconComponent = stat.icon;
                 return (
                     <div
                         key={stat.label}
-                        className={`counter-animate counter-delay-${index + 1} text-center bg-dark-700/30 backdrop-blur-sm p-8 rounded-2xl border border-white/10`}
+                        className={`counter-animate counter-delay-${index + 1} text-center ${stat.bg} backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 hover:-translate-y-1`}
                     >
-                      <div className="w-16 h-16 bg-white/5 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                      <div className={`w-16 h-16 ${stat.bg} rounded-2xl mx-auto mb-4 flex items-center justify-center`}>
                         <IconComponent className={`w-8 h-8 ${stat.color}`} />
                       </div>
                       <div className="text-4xl font-bold text-white mb-2 font-display">
@@ -734,19 +832,23 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Contact Section with Purple Theme */}
+        <section id="contact" className="py-20 bg-dark-900 relative overflow-hidden">
+          {/* Purple Background Effects */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-primary-500/5 rounded-full blur-3xl animate-blob"></div>
+            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-blob" style={{animationDelay: '2s'}}></div>
+            <div className="absolute inset-0 bg-noise opacity-[0.01]"></div>
+          </div>
 
-
-        {/* Contact Section */}
-
-        <section id="contact" className="py-20 bg-dark-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center px-4 py-2 bg-primary-500/10 border border-primary-500/20 rounded-full text-primary-400 text-sm font-medium mb-6">
+              <div className="inline-flex items-center px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium mb-6">
                 <MessageCircle className="w-4 h-4 mr-2" />
                 Contact
               </div>
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-display">
-                Prêt à Démarrer Votre <span className="text-primary-400 drop-shadow-[0_0_10px_rgba(14,165,233,0.5)] animate-pulse select-none">Projet</span> ?
+                Prêt à Démarrer Votre <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(168,85,247,0.5)] animate-pulse select-none">Projet</span> ?
               </h2>
               <p className="text-xl text-neutral-300 max-w-3xl mx-auto">
                 Contactez-nous dès aujourd'hui pour discuter de vos besoins et obtenir un devis personnalisé
@@ -754,18 +856,16 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
-
-
-              {/* Nos réalisations */}
+              {/* Nos réalisations avec Purple Theme */}
               <div className="animate-slide-in-left">
-                <div className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10">
+                <div className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-purple-500/30 transition-all duration-500 hover:-translate-y-1">
                   <h3 className="text-2xl font-bold text-white mb-6 font-display">
                     Nos Projets Réalisés
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Systech Consulting */}
-                    <div className="group relative bg-dark-800/50 rounded-xl overflow-hidden border border-white/10 hover:border-primary-500/30 transition-all duration-300">
+                    <div className="group relative bg-dark-800/50 rounded-xl overflow-hidden border border-white/10 hover:border-purple-500/30 transition-all duration-300">
                       <div className="aspect-video overflow-hidden">
                         <img
                             src="/images/achievements/systech-consulting-website-development-casablanca-morocco.webp"
@@ -780,27 +880,27 @@ export default function Home() {
                             href="https://systech-consulting.net/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center text-primary-400 hover:text-primary-300 text-sm mt-2"
+                            className="inline-flex items-center text-purple-400 hover:text-purple-300 text-sm mt-2"
                         >
                           Voir le site
                         </a>
                       </div>
                     </div>
 
-                    {/* IdasFish */}
+                    {/* Vip Marrakech Trips */}
                     <div className="group relative bg-dark-800/50 rounded-xl overflow-hidden border border-white/10 hover:border-secondary-500/30 transition-all duration-300">
                       <div className="aspect-video overflow-hidden">
                         <img
-                            src="/images/achievements/idasfish-ecommerce-aquaculture-website-morocco.webp"
-                            alt="IdasFish - E-commerce aquaculture Maroc"
+                            src="/images/achievements/marrakech-luxury-travel-experiences-vip-tours-morocco.webp"
+                            alt="VIP Marrakech Trips - Luxury Travel Experiences Morocco"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       <div className="p-4">
-                        <h4 className="font-semibold text-white mb-1">IdasFish</h4>
-                        <p className="text-sm text-neutral-400">E-commerce aquaculture</p>
+                        <h4 className="font-semibold text-white mb-1">VIP Marrakech Trips</h4>
+                        <p className="text-sm text-neutral-400">VIP Marrakech Trips - Travel Booking Platform Morocco</p>
                         <a
-                            href="https://idasfish.com/"
+                            href="https://www.vipmarrakechtrips.com/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center text-secondary-400 hover:text-secondary-300 text-sm mt-2"
@@ -833,23 +933,23 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Zarine Accessoires */}
-                    <div className="group relative bg-dark-800/50 rounded-xl overflow-hidden border border-white/10 hover:border-primary-500/30 transition-all duration-300">
+                    {/* Red City Balloons */}
+                    <div className="group relative bg-dark-800/50 rounded-xl overflow-hidden border border-white/10 hover:border-purple-500/30 transition-all duration-300">
                       <div className="aspect-video overflow-hidden">
                         <img
-                            src="/images/achievements/zarine-accessoires-ecommerce-fashion-website-morocco.webp"
-                            alt="Zarine Accessoires - E-commerce mode Maroc"
+                            src="/images/achievements/marrakech-sunrise-balloon-flights-atlas-mountains-morocco.webp"
+                            alt="Red City Balloons - Hot Air Balloon Flights Marrakech Morocco"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       <div className="p-4">
-                        <h4 className="font-semibold text-white mb-1">Zarine Accessoires</h4>
-                        <p className="text-sm text-neutral-400">E-commerce mode</p>
+                        <h4 className="font-semibold text-white mb-1">Red City Balloons</h4>
+                        <p className="text-sm text-neutral-400">Red City Balloons - Balloon Flight Booking Platform Morocco</p>
                         <a
-                            href="https://zarineaccessoires.com/"
+                            href="https://www.redcityballoons.com/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center text-primary-400 hover:text-primary-300 text-sm mt-2"
+                            className="inline-flex items-center text-purple-400 hover:text-purple-300 text-sm mt-2"
                         >
                           Voir le site
                         </a>
@@ -884,10 +984,26 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Contact Form */}
 
+
+              {/* Contact Form with Purple Theme */}
               <div className="animate-slide-in-right">
-                <form className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10">
+                <form onSubmit={handleSubmit} className="bg-dark-700/50 backdrop-blur-sm p-8 rounded-3xl border border-white/10 hover:border-purple-500/30 transition-all duration-500 hover:-translate-y-1">
+                  {/* Status Messages */}
+                  {status === 'success' && (
+                      <div className="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-xl flex items-center text-green-300">
+                        <CheckCircle className="w-5 h-5 mr-3" />
+                        Message envoyé avec succès! Nous vous répondrons dans les 24h.
+                      </div>
+                  )}
+
+                  {status === 'error' && (
+                      <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl flex items-center text-red-300">
+                        <X className="w-5 h-5 mr-3" />
+                        Erreur lors de l'envoi. Veuillez réessayer.
+                      </div>
+                  )}
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
@@ -897,8 +1013,10 @@ export default function Home() {
                           type="text"
                           id="name"
                           name="name"
+                          value={formData.name}
+                          onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white placeholder-neutral-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                          className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white placeholder-neutral-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                           placeholder="Votre nom"
                       />
                     </div>
@@ -910,8 +1028,10 @@ export default function Home() {
                           type="email"
                           id="email"
                           name="email"
+                          value={formData.email}
+                          onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white placeholder-neutral-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                          className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white placeholder-neutral-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                           placeholder="votre@email.com"
                       />
                     </div>
@@ -925,7 +1045,9 @@ export default function Home() {
                         type="tel"
                         id="phone"
                         name="phone"
-                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white placeholder-neutral-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white placeholder-neutral-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                         placeholder="+212 XXX-XXXXXX"
                     />
                   </div>
@@ -937,12 +1059,15 @@ export default function Home() {
                     <select
                         id="service"
                         name="service"
+                        value={formData.service}
+                        onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                     >
                       <option value="" className="bg-dark-800">Sélectionnez un service</option>
-                      <option value="site-vitrine" className="bg-dark-800">Site Vitrine (15,000 MAD)</option>
-                      <option value="site-pro" className="bg-dark-800">Site Pro (35,000 MAD)</option>
+                      <option value="site-vitrine" className="bg-dark-800">Landing Page (3,250 MAD)</option>
+                      <option value="site-pro" className="bg-dark-800">Website Pro (5,730 MAD)</option>
+                      <option value="sas-platform" className="bg-dark-800">SaaS Platform (32,000 MAD)</option>
                       <option value="solution-enterprise" className="bg-dark-800">Solution Enterprise (Sur devis)</option>
                       <option value="application-mobile" className="bg-dark-800">Application mobile</option>
                       <option value="autre" className="bg-dark-800">Autre</option>
@@ -956,13 +1081,15 @@ export default function Home() {
                     <select
                         id="budget"
                         name="budget"
-                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        value={formData.budget}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                     >
                       <option value="" className="bg-dark-800">Sélectionnez votre budget</option>
-                      <option value="5k-15k" className="bg-dark-800">5,000 - 15,000 MAD</option>
-                      <option value="15k-35k" className="bg-dark-800">15,000 - 35,000 MAD</option>
-                      <option value="35k-75k" className="bg-dark-800">35,000 - 75,000 MAD</option>
-                      <option value="75k+" className="bg-dark-800">75,000+ MAD</option>
+                      <option value="5k-15k" className="bg-dark-800">3,250 - 5,730 MAD</option>
+                      <option value="15k-35k" className="bg-dark-800">5,730 - 32,000 MAD</option>
+                      <option value="35k-75k" className="bg-dark-800">+ 32,000 MAD</option>
+                      <option value="75k+" className="bg-dark-800">Autre</option>
                     </select>
                   </div>
 
@@ -973,7 +1100,9 @@ export default function Home() {
                     <select
                         id="timeline"
                         name="timeline"
-                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                        value={formData.timeline}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                     >
                       <option value="" className="bg-dark-800">Sélectionnez un délai</option>
                       <option value="urgent" className="bg-dark-800">Urgent (2-4 semaines)</option>
@@ -989,19 +1118,31 @@ export default function Home() {
                     <textarea
                         id="message"
                         name="message"
+                        value={formData.message}
+                        onChange={handleChange}
                         rows={5}
                         required
-                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white placeholder-neutral-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300 resize-none"
+                        className="w-full px-4 py-3 bg-dark-800/50 border border-white/10 rounded-xl text-white placeholder-neutral-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 resize-none"
                         placeholder="Décrivez votre projet en détail..."
-                    ></textarea>
+                    />
                   </div>
 
                   <button
                       type="submit"
-                      className="group w-full bg-gradient-primary text-white font-semibold py-4 px-6 rounded-xl shadow-glow hover:shadow-glow-lg transition-all duration-300 flex items-center justify-center"
+                      disabled={loading}
+                      className="group w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-4 px-6 rounded-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
-                    Envoyer le message
+                    {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          Envoi en cours...
+                        </>
+                    ) : (
+                        <>
+                          <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
+                          Envoyer le message
+                        </>
+                    )}
                   </button>
 
                   <p className="text-sm text-neutral-400 mt-4 text-center">
@@ -1012,11 +1153,124 @@ export default function Home() {
             </div>
 
 
-            {/* FAQ Section */}
+            {/* How we work */}
+
+            <section className="py-20 bg-dark-900 relative overflow-hidden">
+              {/* Purple Background Effects */}
+              <div className="absolute inset-0">
+                <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-blob"></div>
+                <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-primary-500/5 rounded-full blur-3xl animate-blob" style={{animationDelay: '2s'}}></div>
+                <div className="absolute inset-0 bg-noise opacity-[0.01]"></div>
+              </div>
+
+              <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header */}
+                <div className="text-center mb-12">
+                  <div className="inline-flex items-center gap-2 text-purple-400 text-sm mb-4">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                    Comment Ça Marche
+                  </div>
+                  <h3 className="text-3xl font-bold text-white mb-4 font-display">
+                    Processus{' '}
+                    <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Simple</span>,{' '}
+                    Résultats{' '}
+                    <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Garantis</span>
+                  </h3>
+
+                  <p className="text-xl text-neutral-300">
+                    De l'idée au lancement en 4 étapes simples. Pas de confusion, pas de retards, que des résultats.
+                  </p>
+                </div>
+
+                {/* Steps */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {[
+                    {
+                      icon: Phone,
+                      title: "Appel Stratégique",
+                      description: "Nous organisons un appel pour discuter de votre vision, objectifs et exigences en détail",
+                      color: 'text-secondary-400',
+                      bg: 'bg-secondary-500/10'
+                    },
+
+                    {
+                      icon: CreditCard,
+                      title: "Choisir et Payer",
+                      description: "Sélectionnez votre forfait et sécurisez le paiement pour débloquer immédiatement votre créneau de projet",
+                      color: 'text-purple-400',
+                      bg: 'bg-purple-500/10'
+                    },
+
+                    {
+                      icon: Zap,
+                      title: "Je Construis",
+                      description: "Mises à jour quotidiennes sur les progrès pendant que je conçois et développe votre solution personnalisée",
+                      color: 'text-accent-400',
+                      bg: 'bg-accent-500/10'
+                    },
+                    {
+                      icon: Rocket,
+                      title: "Lancement",
+                      description: "Votre projet est mis en ligne exactement comme promis, entièrement testé et optimisé",
+                      color: 'text-purple-400',
+                      bg: 'bg-purple-500/10'
+                    }
+                  ].map((step, index) => {
+                    const IconComponent = step.icon;
+                    return (
+                        <div
+                            key={index}
+                            className="text-center bg-gradient-to-br from-purple-900/40 to-purple-800/20 backdrop-blur-sm p-8 rounded-3xl border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:-translate-y-1 relative shadow-xl"
+                        >
+                          {/* Connector Line */}
+                          {index < 3 && (
+                              <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-purple-500/20 transform -translate-y-1/2 z-0"></div>
+                          )}
+
+                          {/* Icon */}
+                          <div className="w-16 h-16 bg-purple-500/20 rounded-2xl mx-auto mb-4 flex items-center justify-center relative z-10 shadow-lg">
+                            <IconComponent className="w-8 h-8 text-purple-400" />
+                          </div>
+
+                          {/* Content */}
+                          <div>
+                            <h4 className="text-xl font-bold text-white mb-2 font-display">{step.title}</h4>
+                            <p className="text-neutral-300 leading-relaxed">{step.description}</p>
+                          </div>
+                        </div>
+                    );
+                  })}
+                </div>
+
+                {/* Additional info section */}
+                <div className="mt-16 text-center">
+                  <div className="bg-gradient-to-r from-purple-600/20 to-purple-700/20 backdrop-blur-sm rounded-2xl border border-purple-500/30 p-8">
+                    <h3 className="text-2xl font-bold text-white mb-4 font-display">
+                      Prêt à commencer ?
+                    </h3>
+                    <p className="text-neutral-300 mb-6 max-w-2xl mx-auto">
+                      Rejoignez plus de 50 clients satisfaits qui ont fait confiance à notre processus éprouvé
+                      pour transformer leurs idées en succès digitaux.
+                    </p>
+                    <button
+                        onClick={() => window.open('https://wa.me/212694138093?text=Bonjour, je voudrais en savoir plus sur votre processus de développement.', '_blank')}
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold rounded-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1"
+                    >
+                      <Phone className="w-5 h-5 mr-2" />
+                      Démarrer mon projet
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+
+
+            {/* FAQ Section with Purple Theme */}
             <div className="mt-20">
               <div className="text-center mb-12">
                 <h3 className="text-3xl font-bold text-white mb-4 font-display auto-animate">
-                  Questions Fréquentes
+                  Questions <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">Fréquentes</span>
                 </h3>
                 <p className="text-lg text-neutral-300">
                   Trouvez rapidement les réponses à vos questions
@@ -1027,7 +1281,7 @@ export default function Home() {
                 {[
                   {
                     question: "Quel est le délai moyen pour un projet ?",
-                    answer: "Le délai varie selon la complexité : 2-4 semaines pour un site vitrine, 1-2 mois pour un site pro, et 2-6 mois pour une solution enterprise."
+                    answer: "Le délai varie selon la complexité : 1 semaine pour une landing page, 3 semaines pour un site web professionnel, et 2 mois pour une plateforme SaaS."
                   },
                   {
                     question: "Proposez-vous la maintenance après livraison ?",
@@ -1042,7 +1296,7 @@ export default function Home() {
                     answer: "Tous nos sites sont responsive design et optimisés pour tous les appareils (mobile, tablette, desktop)."
                   }
                 ].map((faq, index) => (
-                    <div key={index} className="faq-item bg-dark-700/30 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden">
+                    <div key={index} className="faq-item bg-dark-700/30 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-purple-500/20 transition-all duration-300 overflow-hidden">
                       <button
                           className="faq-question w-full p-6 text-left flex items-center justify-between hover:bg-white/5 transition-all duration-300"
                           onClick={(e) => {
@@ -1078,7 +1332,7 @@ export default function Home() {
                           }}
                       >
                         <h4 className="text-lg font-semibold text-white pr-4">{faq.question}</h4>
-                        <div className="faq-icon text-primary-400 transition-transform duration-300 flex-shrink-0">
+                        <div className="faq-icon text-purple-400 transition-transform duration-300 flex-shrink-0">
                           <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
@@ -1101,6 +1355,26 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Floating Action Button with Purple Theme */}
+        <div className="fixed bottom-8 right-8 z-50">
+          <button
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              className="group w-16 h-16 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 rounded-full shadow-2xl hover:shadow-purple-500/50 flex items-center justify-center transition-all duration-300 hover:scale-110 animate-pulse"
+          >
+            <MessageCircle className="w-6 h-6 text-white group-hover:animate-bounce" />
+          </button>
+        </div>
+
+        {/* Scroll to Top Button with Purple Theme */}
+        <div className="fixed bottom-8 left-8 z-50">
+          <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="group w-12 h-12 bg-dark-800/80 backdrop-blur-sm border border-white/20 hover:border-purple-500/50 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+          >
+            <ChevronDown className="w-5 h-5 text-white rotate-180 group-hover:animate-bounce" />
+          </button>
+        </div>
       </>
   );
 }
